@@ -36,8 +36,11 @@ bot.on('message',message =>{
                 message.channel.send("Please provide a youtube link");
                 return;
             }
-
-
+               
+            if(!message.member.voice.channel){
+                 message.channel.send("You aren't in a voice channel")
+                 return;
+            }
  
             if(!servers[message.guild.id]) servers[message.guild.id]={
                 queue :[]
