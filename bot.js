@@ -1,17 +1,21 @@
 const Discord = require('discord.js');
-const bot = new Discord.Client({disableMentions: 'everyone'});
+const bot = new Discord.Client({ disableMentions: 'everyone' });
 
 const token = 'your-token';
 const PREFIX =';;';
 var servers = {};
+var options = {
+	quality: 'highestaudio',
+	highWaterMark: 1<<25
+}
 
 const ytdl = require("ytdl-core");
 
-bot.on('ready',()=>{
-     console.log('I'm online')
+bot.on('ready', ()=>{
+     console.log('I\'m online')
 })
 
-bot.on('message',message =>{
+bot.on('message', message =>{
 
     let args = message.content.substring(PREFIX.length).split(" ");
     switch(args[0]){
@@ -20,9 +24,9 @@ bot.on('message',message =>{
             function play(connection,message){
                 var sve = servers[message.guild.id];
 
-                sve.dispatcher = connection.play(ytdl(sve.queue[0],{filter: 'audioonly'}));
+                sve.dispatcher = connection.play(ytdl(sve.queue[0], options));
                 sve.queue.shift();
-                sve.dispatcher.on("end",function(){
+                sve.dispatcher.on("end", () => {
                     if(sve.queue[0]){
                         play(connection,message);
                     }else {
@@ -64,7 +68,7 @@ bot.on('message',message =>{
         case 'stop':
                 var sver = servers[message.guild.id];
                 if(message.guild.voiceConnection){
-                    for(var i=sve.queue.length -2;i>=0;i--){
+                    for(let i = sve.queue.length -2;i>=0;i--){
                         sve.queue.splice(i,1);
                     }
                     sve.dispatcher.end();
